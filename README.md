@@ -32,7 +32,7 @@ The user selects an available charge point to navigate to and the app frequently
 
 The user wants to find alternative options, so he goes back to the overview. The app asks for a list of all charge points and supplies last modified. The operator returns a "nothing's changed"-response and the app uses the list from the cache.
 
-Caching the mechanism described are standard HTTP behavior, so this could be implemented by placing some xml files on a webserver. Standard proxy servers can add fault tolerance and alleviate server pressure. Clients does most of the work, like filtering and sorting.
+The caching mechanism described are standard HTTP behavior, so it could be implemented simply by placing some xml files on a webserver. Standard proxy servers can add fault tolerance and alleviate server pressure. It's possible to handle a growing amount of clients, since the client does the heavy lifting like filtering and sorting.
 
 ## 1. List of all charge points
 
