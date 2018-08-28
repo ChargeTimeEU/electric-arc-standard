@@ -1,0 +1,66 @@
+@startuml
+
+User -> CPO : Charge on CP owned by CPO2
+activate CPO
+CPO -> Issuer : Request JWT for CPO2
+activate Issuer
+Issuer -> Issuer : Shared secret with CPO2?
+
+CPO <- Issuer : <JWT>
+deactivate Issuer
+
+note over CPO
+JWT {
+    iss: "Issuer",
+    sub: "Start charge",
+    aud: "CPO2",
+    exp: "1300819380",
+    name: "CPO",
+    credit: 120
+}
+end note
+
+CPO -> CPO2 : Start charge, JWT
+activate CPO2
+CPO2 -> CPO2 : Verify JWT
+CPO2 -> CP : Start charging, max 120 (credit)
+activate CP
+CPO2 <- CP : Transaction: 123
+
+CPO <- CPO2 : <JWT2>
+activate CPO
+
+note over CPO
+JWT {
+    iss: "CPO2",
+    sub: "Stop transaction",
+    aud: "CPO2",
+    name: "CPO"
+    txn: "123"
+}
+end note
+
+User -> CPO : Stop charging
+CPO -> CPO2 : Stop charging, JWT2
+deactivate CPO
+deactivate CPO
+
+CPO2 -> CP : Stop charging
+destroy CP
+CPO2 <- CP : Usage
+activate CPO2
+
+CPO2 -> Issuer : Bill
+activate Issuer
+Issuer -> CPO : Bill
+
+Issuer -> CPO2 : Payment
+deactivate CPO2
+deactivate CPO2
+
+CPO -> Issuer : Payment
+deactivate Issuer
+
+note over CPO: CPO bills User
+
+@enduml
